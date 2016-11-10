@@ -1,6 +1,5 @@
-/* There are two problems:
-   I dont know when I must start slowing down (i do it when im on the half of dis but it doesnt work right)
-   I couldn't understand what the what does sphere walking round */
+/* We fly a little longer
+   We have to fix it */
 
 float myState[12];
 float target[3];
@@ -11,10 +10,10 @@ bool movingEnded;
 void init()
 {
     StartDisSaved = false;
-	target[0] = -0.7;
-	target[1] = 07;
+	target[0] = 0.7;
+	target[1] = 0.7;
 	target[2] = 0.7;
-	movingEnded = true;
+	movingEnded = false;
 	
 }
 
@@ -30,15 +29,7 @@ float getDis(float* pos1, float* pos2)
     return sqrt( qdist );
 }
 
-bool isAlmostEqual(float a, float b, float r) //check 2 float variables if they are almost equal, r is something very little
-{
-    float res = a-b;
-    res = fabsf(res);
-    bool ans = (res<=r);
-    return ans;
-}
-
-bool moveMent(float* target_copy)
+void moveMent(float* target_copy)
 {
     float targ_relative[3];
     float targ_absolute[3];
@@ -58,7 +49,7 @@ bool moveMent(float* target_copy)
             StartDisSaved = true;
             DEBUG(("Start distance is saved, it is %f \n", startDis));
         }
-        if (curDis>(startDis/1.75))
+        if (curDis>(startDis/2))
         {
             api.setForces(targ_relative);
             DEBUG(("We are accellerating \n"));
@@ -67,14 +58,11 @@ bool moveMent(float* target_copy)
         {
             api.setPositionTarget(targ_absolute); 
         }
-        return true;
     }
-    else return false;
 }
 
 void loop()
 {
     api.getMyZRState(myState);
-    if (movingEnded)
-      movingEnded = moveMent(target);
+    moveMent(target);
 }
