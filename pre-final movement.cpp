@@ -6,15 +6,20 @@ float target[3];
 bool StartDisSaved;
 float startDis;
 bool movingEnded;
+float origin[3];
+float vectorBetween[3];
+float myPos[3];
+float current_distance;
+
 
 void init()
 {
+    for(int i = 0;i<3;++i, origin[i]=0);
     StartDisSaved = false;
-	target[0] = 0.7;
-	target[1] = 0.7;
-	target[2] = 0.7;
+	target[0] = 0.5;
+	target[1] = 0.5;
+	target[2] = 0.5;
 	movingEnded = false;
-	
 }
 
 float getDis(float* pos1, float* pos2) 
@@ -29,7 +34,15 @@ float getDis(float* pos1, float* pos2)
     return sqrt( qdist );
 }
 
-void moveMent(float* target_copy)
+void rotation(float* target)
+{
+    for(int i = 0; i < 3; ++i, myPos[i] = myState[i]);
+    mathVecSubtract(vectorBetween,target,myPos,3);
+    mathVecNormalize(vectorBetween,3);
+    api.setAttitudeTarget(vectorBetween);
+}
+
+void movement(float* target_copy)
 {
     float targ_relative[3];
     float targ_absolute[3];
@@ -64,5 +77,6 @@ void moveMent(float* target_copy)
 void loop()
 {
     api.getMyZRState(myState);
-    moveMent(target);
+    movement(target);
+    rotation(target);
 }
