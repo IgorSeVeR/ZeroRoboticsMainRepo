@@ -1,5 +1,9 @@
-/* We fly a little longer
-   We have to fix it */
+/* 
+   We fly a few longer
+   We have to fix it 
+   Test it with start pos (-0,5;-0,5;-0,5)
+   WITH LOVE FROM RUSSIA
+*/
 
 float myState[12];
 float target[3];
@@ -10,6 +14,7 @@ float origin[3];
 float vectorBetween[3];
 float myPos[3];
 float current_distance;
+float att_target[3];
 
 
 void init()
@@ -19,6 +24,8 @@ void init()
 	target[0] = 0.5;
 	target[1] = 0.5;
 	target[2] = 0.5;
+	for(int i=0; i<3; ++i)
+	    att_target[i] = target[i]+0.1;
 	movingEnded = false;
 }
 
@@ -36,7 +43,8 @@ float getDis(float* pos1, float* pos2)
 
 void rotation(float* target)
 {
-    for(int i = 0; i < 3; ++i, myPos[i] = myState[i]);
+    for(int i = 0; i < 3; ++i)
+        myPos[i] = myState[i];
     mathVecSubtract(vectorBetween,target,myPos,3);
     mathVecNormalize(vectorBetween,3);
     api.setAttitudeTarget(vectorBetween);
@@ -78,5 +86,6 @@ void loop()
 {
     api.getMyZRState(myState);
     movement(target);
-    rotation(target);
+    rotation(att_target);
 }
+
